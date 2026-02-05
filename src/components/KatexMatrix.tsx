@@ -7,23 +7,36 @@ interface KatexMatrixProps {
 }
 
 export function KatexMatrix({ matrix, label }: KatexMatrixProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
 
-
-    const latexMatr
+  useEffect(() => {
     if (!containerRef.current) return
 
-    const latex = `\\begin{bma
+    const latexMatrix = matrix
       .map(row => row.join(' & '))
       .join(' \\\\ ')
 
     const latex = `\\begin{bmatrix} ${latexMatrix} \\end{bmatrix}`
 
-      con
-      katex.render(latex, containerRef.current, {
-        displayMode: true,
-        throwOnError: false,
-        className="te
-    </di
+    katex.render(latex, containerRef.current, {
+      displayMode: true,
+      throwOnError: false,
+    })
+  }, [matrix])
+
+  return (
+    <div className="flex flex-col items-center gap-4">
+      {label && (
+        <h3 className="font-space font-semibold text-lg text-foreground">
+          {label}
+        </h3>
+      )}
+      <div
+        ref={containerRef}
+        className="text-foreground font-jetbrains text-lg"
+      />
+    </div>
+  )
 }
 
 
