@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input"
 import { motion } from "framer-motion"
+import { useState, useEffect } from "react"
 
 interface MatrixGridProps {
   rows: number
@@ -10,10 +11,56 @@ interface MatrixGridProps {
   disabled?: boolean
 }
 
+function MatrixCell({ 
+  value, 
+  onChange, 
+  id, 
+  disabled 
+}: { 
+  value: number
+  onChange: (val: string) => void
+  id: string
+  disabled?: boolean
+}) {
+  const [displayValue, setDisplayValue] = useState(String(value))
+
+  useEffect(() => {
+    setDisplayValue(String(value))
+  }, [value])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setDisplayValue(val)
+    onChange(val)
+  }
+
+  const handleBlur = () => {
+    if (displayValue === '' || displayValue === '-' || displayValue === '-.') {
+      setDisplayValue('0')
+      onChange('0')
+    }
+  }
+
+  return (
+    <Input
+      id={id}
+      type="text"
+      inputMode="decimal"
+      value={displayValue}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      disabled={disabled}
+      className="w-12 h-12 md:w-14 md:h-14 text-center font-jetbrains text-base p-0 
+               transition-all duration-150
+               focus:scale-105 focus:ring-2 focus:ring-accent focus:border-accent
+               disabled:opacity-50 disabled:cursor-not-allowed"
+    />
+  )
+}
+
 export function MatrixGrid({ rows, cols, values, onChange, label, disabled }: MatrixGridProps) {
   const handleCellChange = (row: number, col: number, val: string) => {
-    if (val === '' || val === '-') {
-      onChange(row, col, 0)
+    if (val === '' || val === '-' || val === '-.') {
       return
     }
     const numValue = parseFloat(val)
@@ -40,18 +87,12 @@ export function MatrixGrid({ rows, cols, values, onChange, label, disabled }: Ma
       >
         {Array.from({ length: rows }).map((_, rowIdx) =>
           Array.from({ length: cols }).map((_, colIdx) => (
-            <Input
+            <MatrixCell
               key={`${rowIdx}-${colIdx}`}
               id={`${label.toLowerCase().replace(/\s+/g, '-')}-${rowIdx}-${colIdx}`}
-              type="text"
-              inputMode="decimal"
               value={values[rowIdx]?.[colIdx] ?? 0}
-              onChange={(e) => handleCellChange(rowIdx, colIdx, e.target.value)}
+              onChange={(val) => handleCellChange(rowIdx, colIdx, val)}
               disabled={disabled}
-              className="w-12 h-12 md:w-14 md:h-14 text-center font-jetbrains text-base p-0 
-                       transition-all duration-150
-                       focus:scale-105 focus:ring-2 focus:ring-accent focus:border-accent
-                       disabled:opacity-50 disabled:cursor-not-allowed"
             />
           ))
         )}
