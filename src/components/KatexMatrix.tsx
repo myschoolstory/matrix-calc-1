@@ -1,28 +1,28 @@
 import { useEffect, useRef } from "react"
-
+import katex from "katex"
 
 interface KatexMatrixProps {
   matrix: number[][]
   label?: string
- 
+}
 
 export function KatexMatrix({ matrix, label }: KatexMatrixProps) {
-    const latex = `\\begin{bmatrix} ${latexMatrix} 
+  const containerRef = useRef<HTMLDivElement>(null)
 
-      throwOnError:
+  useEffect(() => {
     if (!containerRef.current) return
 
-      {label && (
+    const latexMatrix = matrix
       .map(row => row.join(' & '))
       .join(' \\\\ ')
 
     const latex = `\\begin{bmatrix} ${latexMatrix} \\end{bmatrix}`
 
-
-
-
-
-
+    katex.render(latex, containerRef.current, {
+      throwOnError: false,
+      displayMode: true,
+    })
+  }, [matrix])
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -38,5 +38,3 @@ export function KatexMatrix({ matrix, label }: KatexMatrixProps) {
     </div>
   )
 }
-
-
