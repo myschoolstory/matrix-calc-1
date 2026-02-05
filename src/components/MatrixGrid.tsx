@@ -12,7 +12,11 @@ interface MatrixGridProps {
 
 export function MatrixGrid({ rows, cols, values, onChange, label, disabled }: MatrixGridProps) {
   const handleCellChange = (row: number, col: number, val: string) => {
-    const numValue = val === '' ? 0 : parseFloat(val)
+    if (val === '' || val === '-') {
+      onChange(row, col, 0)
+      return
+    }
+    const numValue = parseFloat(val)
     if (!isNaN(numValue)) {
       onChange(row, col, numValue)
     }
