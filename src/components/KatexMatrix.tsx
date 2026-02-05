@@ -10,18 +10,18 @@ export function KatexMatrix({ matrix, label }: KatexMatrixProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (!containerRef.current) return
+
     const latexMatrix = matrix
+      .map(row => row.join(' & '))
+      .join(' \\\\ ')
 
-    const latex = `\\begin{bma
+    const latex = `\\begin{bmatrix} ${latexMatrix} \\end{bmatrix}`
+
     try {
-        displayMode: 
-
-    } catch (error) {
-
-
-    <div className="flex flex-col items-center ga
-        <h3 className="fon
-        </h3>
+      katex.render(latex, containerRef.current, {
+        displayMode: true,
+        throwOnError: false,
         trust: false,
       })
     } catch (error) {
@@ -35,14 +35,6 @@ export function KatexMatrix({ matrix, label }: KatexMatrixProps) {
         <h3 className="font-space font-semibold text-lg text-foreground">
           {label}
         </h3>
-      )}
-      <div 
-        ref={containerRef} 
-        className="text-foreground text-2xl md:text-3xl"
-      />
-    </div>
-  )
-}
       )}
       <div 
         ref={containerRef} 
