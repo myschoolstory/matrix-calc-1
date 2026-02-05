@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react"
 import { MatrixGrid } from "@/components/MatrixGrid"
 import { DimensionSelector } from "@/components/DimensionSelector"
+import { KatexMatrix } from "@/components/KatexMatrix"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
@@ -257,14 +258,10 @@ function App() {
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 className="flex justify-center"
               >
-                <Card className="p-4 md:p-6 border-2 border-accent">
-                  <MatrixGrid
-                    rows={result.length}
-                    cols={result[0].length}
-                    values={result}
-                    onChange={() => {}}
-                    label="Result (A × B)"
-                    disabled
+                <Card className="p-6 md:p-8 border-2 border-accent bg-accent/5">
+                  <KatexMatrix 
+                    matrix={result} 
+                    label="Result (A × B)" 
                   />
                 </Card>
               </motion.div>
